@@ -15,8 +15,7 @@ export interface Contact {
 interface ContactCreateUpdate {
   name: string
   phone: string
-  email: string | null
-  image_url?: string | null
+  email?: string | null
 }
 
 interface PaginatedResponse {
@@ -51,17 +50,21 @@ export const useContactStore = defineStore('contacts', () => {
   const authStore = useAuthStore()
 
   const apiCall = async <T>(endpoint: string, options: RequestInit = {}): Promise<T> => {
-    const headers: Record<string, string> = {}
+    if (!authStore.token) {
+      throw new Error('Não autenticado')
+    }
+
+    const headers: Record<string, string> = {
+      Accept: 'application/json',
+    }
 
     const isFormData = options.body instanceof FormData
 
-    if (!isFormData && (!options.method || options.method === 'GET')) {
+    if (!isFormData) {
       headers['Content-Type'] = 'application/json'
     }
 
-    if (authStore.token) {
-      headers['Authorization'] = `Bearer ${authStore.token}`
-    }
+    headers['Authorization'] = `Bearer ${authStore.token}`
 
     const response = await fetch(`${API_URL}${endpoint}`, {
       ...options,
@@ -72,11 +75,19 @@ export const useContactStore = defineStore('contacts', () => {
     })
 
     if (!response.ok) {
+      if (response.status === 401) {
+        authStore.logout()
+        throw new Error('Sessão expirada. Faça login novamente.')
+      }
+
       try {
         const errorData = await response.json()
         throw new Error(errorData.error || errorData.message || `Erro: ${response.status}`)
-      } catch {
-        throw new Error(`Erro na requisição: ${response.status}`)
+      } catch (e) {
+        if (e instanceof Error && e.message.includes('JSON')) {
+          throw new Error(`Erro na requisição: ${response.status}`)
+        }
+        throw e
       }
     }
 
@@ -146,7 +157,7 @@ export const useContactStore = defineStore('contacts', () => {
         body: formData,
       })
 
-      contacts.value.push(response.data)
+      contacts.value.unshift(response.data)
       return response.data
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Erro ao criar contato'
@@ -166,13 +177,14 @@ export const useContactStore = defineStore('contacts', () => {
 
     try {
       const formData = new FormData()
+      formData.append('_method', 'PUT')
       formData.append('name', contact.name)
       formData.append('phone', contact.phone)
       if (contact.email) formData.append('email', contact.email)
       if (imageFile) formData.append('image', imageFile)
 
       const response = await apiCall<ContactResponse>(`/contacts/${id}`, {
-        method: 'PUT',
+        method: 'POST',
         body: formData,
       })
 

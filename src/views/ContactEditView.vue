@@ -321,14 +321,25 @@ const handleSubmit = async () => {
 
   loading.value = true
   try {
-    await contactStore.createContact(
-      { ...form.value, phone: form.value.phone },
+    const result = await contactStore.updateContact(
+      Number(route.params.id),
+      {
+        name: form.value.name,
+        phone: form.value.phone,
+        email: form.value.email,
+      },
       imageFile.value || undefined,
     )
-    showNotification('Contato criado com sucesso!')
-    setTimeout(() => router.push('/'), 500)
+
+    if (result) {
+      showNotification('Contato atualizado com sucesso!')
+      setTimeout(() => router.push('/'), 500)
+    } else {
+      showNotification(contactStore.error || 'Erro ao atualizar contato', 'error')
+    }
   } catch (e) {
-    showNotification('Erro ao criar contato', 'error')
+    console.error('Submit error:', e)
+    showNotification('Erro ao atualizar contato', 'error')
   } finally {
     loading.value = false
   }

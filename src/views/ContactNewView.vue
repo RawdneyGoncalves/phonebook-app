@@ -271,7 +271,6 @@ const handleSubmit = async () => {
         name: form.value.name.trim(),
         phone: form.value.phone,
         email: form.value.email.trim(),
-        image_url: null,
       },
       imageFile.value || undefined,
     )

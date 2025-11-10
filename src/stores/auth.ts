@@ -9,14 +9,6 @@ interface User {
   updated_at: string
 }
 
-interface AuthResponse {
-  message: string
-  data: {
-    user: User
-    token: string
-  }
-}
-
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -80,10 +72,10 @@ export const useAuthStore = defineStore('auth', () => {
         body: JSON.stringify({ email, password }),
       })
 
-      token.value = response.token
-      user.value = response.user
+      token.value = response.data.token
+      user.value = response.data.user
       isAuthenticated.value = true
-      localStorage.setItem('token', response.token)
+      localStorage.setItem('token', response.data.token)
 
       return true
     } catch (err) {
@@ -114,10 +106,10 @@ export const useAuthStore = defineStore('auth', () => {
         }),
       })
 
-      token.value = response.token
-      user.value = response.user
+      token.value = response.data.token
+      user.value = response.data.user
       isAuthenticated.value = true
-      localStorage.setItem('token', response.token)
+      localStorage.setItem('token', response.data.token)
 
       return true
     } catch (err) {
