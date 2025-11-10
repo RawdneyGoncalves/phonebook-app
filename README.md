@@ -1,6 +1,6 @@
 # phonebook-app
 
-VIDEO: https://youtu.be/QD6PtxELuOk
+VIDEO: https://youtu.be/dAt20HTwCvk
 
 ## Recommended IDE Setup
 
