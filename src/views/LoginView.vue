@@ -112,7 +112,7 @@ const handleLogin = async () => {
   if (success) {
     router.push('/')
   } else {
-    error.value = 'Email ou senha incorretos'
+    error.value = authStore.error || 'Erro ao fazer login'
   }
 
   loading.value = false

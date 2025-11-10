@@ -1,4 +1,3 @@
-<!-- src/views/ContactEditView.vue -->
 <template>
   <div class="form-container" v-if="contact">
     <div class="form-header">
@@ -41,8 +40,8 @@
             </svg>
           </div>
         </div>
-        <div v-else-if="contact.image" class="avatar-preview">
-          <img :src="contact.image" :alt="contact.name" />
+        <div v-else-if="contact.image_url" class="avatar-preview">
+          <img :src="contact.image_url" :alt="contact.name" />
           <div class="avatar-overlay">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
               <path
@@ -100,6 +99,7 @@
             type="text"
             placeholder="Nome"
             required
+            minlength="3"
             autocomplete="name"
             class="input"
           />
@@ -109,6 +109,7 @@
           <input
             v-model="phoneDisplay"
             @input="handlePhoneInput"
+            @keypress="preventNonNumeric"
             type="tel"
             placeholder="Telefone"
             required
@@ -116,6 +117,7 @@
             inputmode="numeric"
             class="input"
           />
+          <p v-if="phoneError" class="field-error">{{ phoneError }}</p>
         </div>
 
         <div class="form-group">
@@ -123,7 +125,6 @@
             v-model="form.email"
             type="email"
             placeholder="Email"
-            required
             autocomplete="email"
             inputmode="email"
             class="input"
@@ -191,21 +192,24 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useContactStore } from '@/stores/contacts'
+import { usePhoneFormatter } from '@/composables/usePhoneFormatter'
 import type { Contact } from '@/stores/contacts'
 import ImageCropper from '@/components/ImageCropper.vue'
 
 const router = useRouter()
 const route = useRoute()
 const contactStore = useContactStore()
+const { sanitizePhone, validatePhone, preventNonNumeric } = usePhoneFormatter()
 
 const contact = ref<Contact | null>(null)
 const form = ref({
   name: '',
   phone: '',
-  email: '',
+  email: '' as string | null,
 })
 
 const phoneDisplay = ref('')
+const phoneError = ref('')
 const imageFile = ref<File | null>(null)
 const imagePreview = ref<string | null>(null)
 const tempImageSrc = ref('')
@@ -228,21 +232,15 @@ const showNotification = (message: string, type: 'success' | 'error' = 'success'
 
 const handlePhoneInput = (event: Event) => {
   const target = event.target as HTMLInputElement
-  const value = target.value.replace(/\D/g, '')
+  const value = sanitizePhone(target.value)
   phoneDisplay.value = value
   form.value.phone = value
-}
 
-const formatPhone = (phone: string): string => {
-  const cleaned = phone.replace(/\D/g, '')
-
-  if (cleaned.length === 11) {
-    return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
-  } else if (cleaned.length === 10) {
-    return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3')
+  if (value && !validatePhone(value)) {
+    phoneError.value = 'Telefone deve ter entre 10 e 20 dígitos'
+  } else {
+    phoneError.value = ''
   }
-
-  return cleaned
 }
 
 const getInitials = (name: string): string => {
@@ -317,13 +315,22 @@ const handleCroppedImage = (blob: Blob) => {
 }
 
 const handleSubmit = async () => {
+  if (!validatePhone(form.value.phone)) {
+    phoneError.value = 'Telefone deve ter entre 10 e 20 dígitos'
+    return
+  }
+
   loading.value = true
 
   try {
-    const formattedPhone = formatPhone(form.value.phone)
     await contactStore.updateContact(
       Number(route.params.id),
-      { ...form.value, phone: formattedPhone },
+      {
+        name: form.value.name,
+        phone: form.value.phone,
+        email: form.value.email,
+        image_url: contact.value?.image_url,
+      },
       imageFile.value || undefined,
     )
     showNotification('Contato atualizado com sucesso!')
@@ -340,11 +347,11 @@ const handleSubmit = async () => {
 onMounted(async () => {
   contact.value = await contactStore.getContact(Number(route.params.id))
   if (contact.value) {
-    const cleanPhone = contact.value.phone.replace(/\D/g, '')
+    const cleanPhone = sanitizePhone(contact.value.phone)
     form.value = {
       name: contact.value.name,
       phone: cleanPhone,
-      email: contact.value.email,
+      email: contact.value.email || '',
     }
     phoneDisplay.value = cleanPhone
   }
@@ -511,7 +518,13 @@ onMounted(async () => {
   box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.1);
 }
 
-/* Toast Notification */
+.field-error {
+  font-size: 12px;
+  color: #ff453a;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
 .toast {
   position: fixed;
   top: 80px;

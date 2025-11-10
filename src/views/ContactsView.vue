@@ -22,7 +22,7 @@
         @click="contact.id && goToDetail(contact.id)"
       >
         <div class="contact-avatar">
-          <img v-if="contact.image" :src="contact.image" :alt="contact.name" />
+          <img v-if="contact.image_url" :src="contact.image_url" :alt="contact.name" />
           <div
             v-else
             class="avatar-placeholder"
@@ -79,7 +79,7 @@ const filteredContacts = computed(() => {
     (contact) =>
       contact.name.toLowerCase().includes(query) ||
       contact.phone.includes(query) ||
-      contact.email.toLowerCase().includes(query),
+      (contact.email?.toLowerCase().includes(query) ?? false),
   )
 })
 

@@ -70,6 +70,7 @@
             type="text"
             placeholder="Nome"
             required
+            minlength="3"
             autocomplete="name"
             class="input"
           />
@@ -79,6 +80,7 @@
           <input
             v-model="phoneDisplay"
             @input="handlePhoneInput"
+            @keypress="preventNonNumeric"
             type="tel"
             placeholder="Telefone"
             required
@@ -86,6 +88,7 @@
             inputmode="numeric"
             class="input"
           />
+          <p v-if="phoneError" class="field-error">{{ phoneError }}</p>
         </div>
 
         <div class="form-group">
@@ -161,10 +164,12 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useContactStore } from '@/stores/contacts'
+import { usePhoneFormatter } from '@/composables/usePhoneFormatter'
 import ImageCropper from '@/components/ImageCropper.vue'
 
 const router = useRouter()
 const contactStore = useContactStore()
+const { sanitizePhone, formatPhoneDisplay, validatePhone, preventNonNumeric } = usePhoneFormatter()
 
 const form = ref({
   name: '',
@@ -173,6 +178,7 @@ const form = ref({
 })
 
 const phoneDisplay = ref('')
+const phoneError = ref('')
 const imageFile = ref<File | null>(null)
 const imagePreview = ref<string | null>(null)
 const tempImageSrc = ref('')
@@ -195,21 +201,15 @@ const showNotification = (message: string, type: 'success' | 'error' = 'success'
 
 const handlePhoneInput = (event: Event) => {
   const target = event.target as HTMLInputElement
-  const value = target.value.replace(/\D/g, '')
+  const value = sanitizePhone(target.value)
   phoneDisplay.value = value
   form.value.phone = value
-}
 
-const formatPhone = (phone: string): string => {
-  const cleaned = phone.replace(/\D/g, '')
-
-  if (cleaned.length === 11) {
-    return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
-  } else if (cleaned.length === 10) {
-    return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3')
+  if (value && !validatePhone(value)) {
+    phoneError.value = 'Telefone deve ter entre 10 e 20 dígitos'
+  } else {
+    phoneError.value = ''
   }
-
-  return cleaned
 }
 
 const goBack = () => {
@@ -248,12 +248,16 @@ const handleCroppedImage = (blob: Blob) => {
 }
 
 const handleSubmit = async () => {
+  if (!validatePhone(form.value.phone)) {
+    phoneError.value = 'Telefone deve ter entre 10 e 20 dígitos'
+    return
+  }
+
   loading.value = true
 
   try {
-    const formattedPhone = formatPhone(form.value.phone)
     await contactStore.createContact(
-      { ...form.value, phone: formattedPhone },
+      { ...form.value, phone: form.value.phone },
       imageFile.value || undefined,
     )
     showNotification('Contato criado com sucesso!')
@@ -423,7 +427,13 @@ const handleSubmit = async () => {
   box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.1);
 }
 
-/* Toast Notification */
+.field-error {
+  font-size: 12px;
+  color: #ff453a;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
 .toast {
   position: fixed;
   top: 80px;

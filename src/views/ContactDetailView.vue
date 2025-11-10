@@ -25,7 +25,7 @@
           @change="handleFileChange"
           style="display: none"
         />
-        <img v-if="contact.image" :src="contact.image" :alt="contact.name" />
+        <img v-if="contact.image_url" :src="contact.image_url" :alt="contact.name" />
         <div
           v-else
           class="avatar-placeholder-large"
