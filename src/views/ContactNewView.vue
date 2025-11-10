@@ -169,7 +169,7 @@ import ImageCropper from '@/components/ImageCropper.vue'
 
 const router = useRouter()
 const contactStore = useContactStore()
-const { sanitizePhone, formatPhoneDisplay, validatePhone, preventNonNumeric } = usePhoneFormatter()
+const { sanitizePhone, validatePhone, preventNonNumeric } = usePhoneFormatter()
 
 const form = ref({
   name: '',
@@ -248,23 +248,45 @@ const handleCroppedImage = (blob: Blob) => {
 }
 
 const handleSubmit = async () => {
+  if (!form.value.name.trim()) {
+    showNotification('Nome é obrigatório', 'error')
+    return
+  }
+
   if (!validatePhone(form.value.phone)) {
     phoneError.value = 'Telefone deve ter entre 10 e 20 dígitos'
+    return
+  }
+
+  if (!form.value.email.trim()) {
+    showNotification('Email é obrigatório', 'error')
     return
   }
 
   loading.value = true
 
   try {
-    await contactStore.createContact(
-      { ...form.value, phone: form.value.phone },
+    const result = await contactStore.createContact(
+      {
+        name: form.value.name.trim(),
+        phone: form.value.phone,
+        email: form.value.email.trim(),
+        image_url: null,
+      },
       imageFile.value || undefined,
     )
-    showNotification('Contato criado com sucesso!')
-    setTimeout(() => {
-      router.push('/')
-    }, 500)
+
+    if (result) {
+      showNotification('Contato criado com sucesso!')
+      setTimeout(async () => {
+        await contactStore.fetchContacts()
+        router.push('/')
+      }, 500)
+    } else {
+      showNotification(contactStore.error || 'Erro ao criar contato', 'error')
+    }
   } catch (e) {
+    console.error('Submit error:', e)
     showNotification('Erro ao criar contato', 'error')
   } finally {
     loading.value = false

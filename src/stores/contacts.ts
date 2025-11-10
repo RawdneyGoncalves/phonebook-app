@@ -138,12 +138,8 @@ export const useContactStore = defineStore('contacts', () => {
       const formData = new FormData()
       formData.append('name', contact.name)
       formData.append('phone', contact.phone)
-      if (contact.email) {
-        formData.append('email', contact.email)
-      }
-      if (imageFile) {
-        formData.append('image', imageFile)
-      }
+      if (contact.email) formData.append('email', contact.email)
+      if (imageFile) formData.append('image', imageFile)
 
       const response = await apiCall<ContactResponse>('/contacts', {
         method: 'POST',
@@ -172,12 +168,8 @@ export const useContactStore = defineStore('contacts', () => {
       const formData = new FormData()
       formData.append('name', contact.name)
       formData.append('phone', contact.phone)
-      if (contact.email) {
-        formData.append('email', contact.email)
-      }
-      if (imageFile) {
-        formData.append('image', imageFile)
-      }
+      if (contact.email) formData.append('email', contact.email)
+      if (imageFile) formData.append('image', imageFile)
 
       const response = await apiCall<ContactResponse>(`/contacts/${id}`, {
         method: 'PUT',
@@ -185,10 +177,7 @@ export const useContactStore = defineStore('contacts', () => {
       })
 
       const index = contacts.value.findIndex((c) => c.id === id)
-      if (index !== -1) {
-        contacts.value[index] = response.data
-      }
-
+      if (index !== -1) contacts.value[index] = response.data
       currentContact.value = response.data
       return response.data
     } catch (err) {

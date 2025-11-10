@@ -310,7 +310,6 @@ const handleCroppedImage = (blob: Blob) => {
     imagePreview.value = e.target?.result as string
   }
   reader.readAsDataURL(blob)
-
   showCropper.value = false
 }
 
@@ -321,24 +320,15 @@ const handleSubmit = async () => {
   }
 
   loading.value = true
-
   try {
-    await contactStore.updateContact(
-      Number(route.params.id),
-      {
-        name: form.value.name,
-        phone: form.value.phone,
-        email: form.value.email,
-        image_url: contact.value?.image_url,
-      },
+    await contactStore.createContact(
+      { ...form.value, phone: form.value.phone },
       imageFile.value || undefined,
     )
-    showNotification('Contato atualizado com sucesso!')
-    setTimeout(() => {
-      router.push('/')
-    }, 500)
+    showNotification('Contato criado com sucesso!')
+    setTimeout(() => router.push('/'), 500)
   } catch (e) {
-    showNotification('Erro ao atualizar contato', 'error')
+    showNotification('Erro ao criar contato', 'error')
   } finally {
     loading.value = false
   }
