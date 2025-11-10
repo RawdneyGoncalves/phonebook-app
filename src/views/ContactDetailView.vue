@@ -1,48 +1,73 @@
-<!-- src/views/ContactDetailView.vue -->
 <template>
   <div class="detail-container" v-if="contact">
     <div class="detail-header">
       <button @click="goBack" class="btn-back">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path
+            d="M19 12H5M12 19l-7-7 7-7"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
       </button>
       <h2>Detalhes</h2>
       <button @click="goToEdit" class="btn-edit">Editar</button>
     </div>
-    
+
     <div class="detail-content">
       <div class="contact-avatar-large" @click="triggerFileInput">
-        <input 
+        <input
           ref="fileInput"
-          type="file" 
-          accept="image/*" 
+          type="file"
+          accept="image/*"
           @change="handleFileChange"
           style="display: none"
         />
-        <img 
-          v-if="contact.image" 
-          :src="contact.image" 
-          :alt="contact.name"
-        />
-        <div v-else class="avatar-placeholder-large" :style="{ background: getAvatarColor(contact.name) }">
+        <img v-if="contact.image" :src="contact.image" :alt="contact.name" />
+        <div
+          v-else
+          class="avatar-placeholder-large"
+          :style="{ background: getAvatarColor(contact.name) }"
+        >
           {{ getInitials(contact.name) }}
         </div>
         <div class="camera-icon-detail">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path
+              d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle
+              cx="12"
+              cy="13"
+              r="4"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </div>
       </div>
-      
+
       <h1 class="contact-name">{{ contact.name }}</h1>
-      
+
       <div class="contact-details">
         <div class="detail-item">
           <div class="detail-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </div>
           <div class="detail-info">
@@ -50,12 +75,24 @@
             <p class="detail-value">{{ contact.phone }}</p>
           </div>
         </div>
-        
+
         <div class="detail-item">
           <div class="detail-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="m22 6-10 7L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path
+                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="m22 6-10 7L2 6"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </div>
           <div class="detail-info">
@@ -64,12 +101,36 @@
           </div>
         </div>
       </div>
-      
+
       <button @click="showDeleteConfirm = true" class="btn-delete">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <line x1="10" y1="11" x2="10" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <line x1="14" y1="11" x2="14" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path
+            d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <line
+            x1="10"
+            y1="11"
+            x2="10"
+            y2="17"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <line
+            x1="14"
+            y1="11"
+            x2="14"
+            y2="17"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
         Excluir Contato
       </button>
@@ -83,13 +144,14 @@
             <h3>Excluir Contato</h3>
           </div>
           <div class="modal-body">
-            <p>Tem certeza que deseja excluir <strong>{{ contact.name }}</strong>?</p>
+            <p>
+              Tem certeza que deseja excluir <strong>{{ contact.name }}</strong
+              >?
+            </p>
             <p class="modal-warning">Esta ação não pode ser desfeita.</p>
           </div>
           <div class="modal-actions">
-            <button @click="showDeleteConfirm = false" class="btn-modal-cancel">
-              Cancelar
-            </button>
+            <button @click="showDeleteConfirm = false" class="btn-modal-cancel">Cancelar</button>
             <button @click="handleDelete" class="btn-modal-delete" :disabled="loading">
               {{ loading ? 'Excluindo...' : 'Excluir' }}
             </button>
@@ -102,13 +164,41 @@
     <Transition name="toast">
       <div v-if="showToast" class="toast" :class="toastType">
         <div class="toast-icon">
-          <svg v-if="toastType === 'success'" width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            v-if="toastType === 'success'"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M20 6L9 17l-5-5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-            <line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <line x1="12" y1="16" x2="12.01" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+            <line
+              x1="12"
+              y1="8"
+              x2="12"
+              y2="12"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="12"
+              y1="16"
+              x2="12.01"
+              y2="16"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
           </svg>
         </div>
         <span>{{ toastMessage }}</span>
@@ -140,14 +230,17 @@ const showNotification = (message: string, type: 'success' | 'error' = 'success'
   toastMessage.value = message
   toastType.value = type
   showToast.value = true
-  
+
   setTimeout(() => {
     showToast.value = false
   }, 3000)
 }
 
 const getInitials = (name: string): string => {
-  const parts = name.trim().split(' ').filter(p => p.length > 0)
+  const parts = name
+    .trim()
+    .split(' ')
+    .filter((p) => p.length > 0)
   if (parts.length >= 2) {
     const first = parts[0]?.[0] ?? ''
     const last = parts[parts.length - 1]?.[0] ?? ''
@@ -167,14 +260,14 @@ const getAvatarColor = (name: string): string => {
     'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
     'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
     'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-    'linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%)'
+    'linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%)',
   ]
-  
+
   let hash = 0
   for (let i = 0; i < name.length; i++) {
     hash = name.charCodeAt(i) + ((hash << 5) - hash)
   }
-  
+
   const index = Math.abs(hash) % colors.length
   return colors[index]!
 }
@@ -194,22 +287,22 @@ const triggerFileInput = () => {
 const handleFileChange = async (event: Event) => {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
-  
+
   if (file && contact.value) {
     imageFile.value = file
     loading.value = true
-    
+
     try {
       await contactStore.updateContact(
         Number(route.params.id),
         {
           name: contact.value.name,
           phone: contact.value.phone,
-          email: contact.value.email
+          email: contact.value.email,
         },
-        file
+        file,
       )
-      
+
       // Recarrega o contato para mostrar a nova imagem
       contact.value = await contactStore.getContact(Number(route.params.id))
       showNotification('Foto atualizada com sucesso!')
@@ -223,7 +316,7 @@ const handleFileChange = async (event: Event) => {
 
 const handleDelete = async () => {
   loading.value = true
-  
+
   try {
     await contactStore.deleteContact(Number(route.params.id))
     showNotification('Contato excluído com sucesso!')
@@ -650,20 +743,20 @@ onMounted(async () => {
   .detail-header {
     padding: 40px 16px 16px;
   }
-  
+
   .detail-content {
     padding: 30px 16px;
   }
-  
+
   .contact-avatar-large {
     width: 120px;
     height: 120px;
   }
-  
+
   .avatar-placeholder-large {
     font-size: 48px;
   }
-  
+
   .contact-name {
     font-size: 28px;
   }

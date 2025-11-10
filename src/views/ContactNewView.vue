@@ -1,4 +1,3 @@
-<!-- src/views/ContactNewView.vue -->
 <template>
   <div class="form-container">
     <div class="form-header">
@@ -8,13 +7,13 @@
         {{ loading ? 'Salvando...' : 'Salvar' }}
       </button>
     </div>
-    
+
     <div class="form-content">
       <div class="avatar-upload" @click="triggerFileInput">
-        <input 
+        <input
           ref="fileInput"
-          type="file" 
-          accept="image/*" 
+          type="file"
+          accept="image/*"
           @change="handleFileChange"
           style="display: none"
         />
@@ -22,50 +21,78 @@
           <img :src="imagePreview" alt="Preview" />
           <div class="avatar-overlay">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path
+                d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <circle
+                cx="12"
+                cy="13"
+                r="4"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </div>
         </div>
         <div v-else class="avatar-placeholder-upload">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path
+              d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle
+              cx="12"
+              cy="13"
+              r="4"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           <p>Adicionar Foto</p>
         </div>
       </div>
-      
+
       <form @submit.prevent="handleSubmit" class="contact-form">
         <div class="form-group">
-          <input 
-            v-model="form.name" 
-            type="text" 
-            placeholder="Nome" 
+          <input
+            v-model="form.name"
+            type="text"
+            placeholder="Nome"
             required
             autocomplete="name"
             class="input"
           />
         </div>
-        
+
         <div class="form-group">
-          <input 
-            v-model="phoneDisplay" 
+          <input
+            v-model="phoneDisplay"
             @input="handlePhoneInput"
-            type="tel" 
-            placeholder="Telefone" 
+            type="tel"
+            placeholder="Telefone"
             required
             autocomplete="tel"
             inputmode="numeric"
             class="input"
           />
         </div>
-        
+
         <div class="form-group">
-          <input 
-            v-model="form.email" 
-            type="email" 
-            placeholder="Email" 
+          <input
+            v-model="form.email"
+            type="email"
+            placeholder="Email"
             required
             autocomplete="email"
             inputmode="email"
@@ -76,9 +103,9 @@
     </div>
 
     <!-- Image Cropper -->
-    <ImageCropper 
-      :show="showCropper" 
-      :image-src="tempImageSrc" 
+    <ImageCropper
+      :show="showCropper"
+      :image-src="tempImageSrc"
       @close="showCropper = false"
       @crop="handleCroppedImage"
     />
@@ -87,13 +114,41 @@
     <Transition name="toast">
       <div v-if="showToast" class="toast" :class="toastType">
         <div class="toast-icon">
-          <svg v-if="toastType === 'success'" width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            v-if="toastType === 'success'"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M20 6L9 17l-5-5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-            <line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <line x1="12" y1="16" x2="12.01" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+            <line
+              x1="12"
+              y1="8"
+              x2="12"
+              y2="12"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="12"
+              y1="16"
+              x2="12.01"
+              y2="16"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
           </svg>
         </div>
         <span>{{ toastMessage }}</span>
@@ -114,7 +169,7 @@ const contactStore = useContactStore()
 const form = ref({
   name: '',
   phone: '',
-  email: ''
+  email: '',
 })
 
 const phoneDisplay = ref('')
@@ -132,7 +187,7 @@ const showNotification = (message: string, type: 'success' | 'error' = 'success'
   toastMessage.value = message
   toastType.value = type
   showToast.value = true
-  
+
   setTimeout(() => {
     showToast.value = false
   }, 3000)
@@ -147,13 +202,13 @@ const handlePhoneInput = (event: Event) => {
 
 const formatPhone = (phone: string): string => {
   const cleaned = phone.replace(/\D/g, '')
-  
+
   if (cleaned.length === 11) {
     return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
   } else if (cleaned.length === 10) {
     return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3')
   }
-  
+
   return cleaned
 }
 
@@ -168,7 +223,7 @@ const triggerFileInput = () => {
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
-  
+
   if (file) {
     const reader = new FileReader()
     reader.onload = (e) => {
@@ -182,24 +237,24 @@ const handleFileChange = (event: Event) => {
 const handleCroppedImage = (blob: Blob) => {
   const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' })
   imageFile.value = file
-  
+
   const reader = new FileReader()
   reader.onload = (e) => {
     imagePreview.value = e.target?.result as string
   }
   reader.readAsDataURL(blob)
-  
+
   showCropper.value = false
 }
 
 const handleSubmit = async () => {
   loading.value = true
-  
+
   try {
     const formattedPhone = formatPhone(form.value.phone)
     await contactStore.createContact(
       { ...form.value, phone: formattedPhone },
-      imageFile.value || undefined
+      imageFile.value || undefined,
     )
     showNotification('Contato criado com sucesso!')
     setTimeout(() => {
@@ -228,7 +283,8 @@ const handleSubmit = async () => {
   backdrop-filter: blur(10px);
 }
 
-.btn-cancel, .btn-save {
+.btn-cancel,
+.btn-save {
   background: none;
   border: none;
   color: #0a84ff;
@@ -238,7 +294,8 @@ const handleSubmit = async () => {
   transition: transform 0.2s ease;
 }
 
-.btn-cancel:active, .btn-save:active:not(:disabled) {
+.btn-cancel:active,
+.btn-save:active:not(:disabled) {
   transform: scale(0.9);
 }
 
@@ -449,11 +506,11 @@ const handleSubmit = async () => {
   .form-header {
     padding: 40px 16px 16px;
   }
-  
+
   .form-content {
     padding: 30px 16px;
   }
-  
+
   .avatar-upload {
     width: 120px;
     height: 120px;

@@ -1,4 +1,3 @@
-// src/stores/auth.ts
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
@@ -9,31 +8,31 @@ export const useAuthStore = defineStore('auth', () => {
 
   const login = async (email: string, password: string) => {
     // Mock: aceita qualquer email/senha
-    await new Promise(resolve => setTimeout(resolve, 500))
-    
+    await new Promise((resolve) => setTimeout(resolve, 500))
+
     const mockToken = 'mock-token-' + Date.now()
     const mockUser = { id: 1, name: 'Usuário Teste', email }
-    
+
     token.value = mockToken
     user.value = mockUser
     isAuthenticated.value = true
     localStorage.setItem('token', mockToken)
-    
+
     return true
   }
 
   const register = async (name: string, email: string, password: string) => {
     // Mock: aceita qualquer registro
-    await new Promise(resolve => setTimeout(resolve, 500))
-    
+    await new Promise((resolve) => setTimeout(resolve, 500))
+
     const mockToken = 'mock-token-' + Date.now()
     const mockUser = { id: 1, name, email }
-    
+
     token.value = mockToken
     user.value = mockUser
     isAuthenticated.value = true
     localStorage.setItem('token', mockToken)
-    
+
     return true
   }
 
@@ -50,6 +49,6 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     login,
     register,
-    logout
+    logout,
   }
 })

@@ -1,4 +1,3 @@
-<!-- src/components/ImageCropper.vue -->
 <template>
   <Transition name="modal">
     <div v-if="show" class="cropper-overlay" @click="emit('close')">

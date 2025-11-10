@@ -1,52 +1,57 @@
-<!-- src/views/ContactsView.vue -->
 <template>
   <div class="contacts-container">
     <div class="header">
       <h1>Contatos</h1>
       <button @click="logout" class="btn-logout">Sair</button>
     </div>
-    
+
     <div class="search-bar">
-      <input 
-        v-model="searchQuery" 
-        type="text" 
-        placeholder="Buscar contato..." 
+      <input
+        v-model="searchQuery"
+        type="text"
+        placeholder="Buscar contato..."
         class="search-input"
       />
     </div>
-    
+
     <div class="contacts-list">
-      <div 
-        v-for="contact in filteredContacts" 
-        :key="contact.id" 
+      <div
+        v-for="contact in filteredContacts"
+        :key="contact.id"
         class="contact-item"
         @click="contact.id && goToDetail(contact.id)"
       >
         <div class="contact-avatar">
-          <img 
-            v-if="contact.image" 
-            :src="contact.image" 
-            :alt="contact.name"
-          />
-          <div v-else class="avatar-placeholder" :style="{ background: getAvatarColor(contact.name) }">
+          <img v-if="contact.image" :src="contact.image" :alt="contact.name" />
+          <div
+            v-else
+            class="avatar-placeholder"
+            :style="{ background: getAvatarColor(contact.name) }"
+          >
             {{ getInitials(contact.name) }}
           </div>
         </div>
-        
+
         <div class="contact-info">
           <h3>{{ contact.name }}</h3>
           <p>{{ contact.phone }}</p>
         </div>
-        
+
         <svg class="chevron" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path
+            d="M9 18l6-6-6-6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
       </div>
     </div>
-    
+
     <button @click="goToNew" class="btn-add">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
       </svg>
     </button>
   </div>
@@ -68,17 +73,21 @@ const filteredContacts = computed(() => {
   if (!searchQuery.value) {
     return contactStore.contacts
   }
-  
+
   const query = searchQuery.value.toLowerCase()
-  return contactStore.contacts.filter(contact => 
-    contact.name.toLowerCase().includes(query) ||
-    contact.phone.includes(query) ||
-    contact.email.toLowerCase().includes(query)
+  return contactStore.contacts.filter(
+    (contact) =>
+      contact.name.toLowerCase().includes(query) ||
+      contact.phone.includes(query) ||
+      contact.email.toLowerCase().includes(query),
   )
 })
 
 const getInitials = (name: string): string => {
-  const parts = name.trim().split(' ').filter(p => p.length > 0)
+  const parts = name
+    .trim()
+    .split(' ')
+    .filter((p) => p.length > 0)
   if (parts.length >= 2) {
     const first = parts[0]?.[0] ?? ''
     const last = parts[parts.length - 1]?.[0] ?? ''
@@ -98,14 +107,14 @@ const getAvatarColor = (name: string): string => {
     'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
     'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
     'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-    'linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%)'
+    'linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%)',
   ]
-  
+
   let hash = 0
   for (let i = 0; i < name.length; i++) {
     hash = name.charCodeAt(i) + ((hash << 5) - hash)
   }
-  
+
   const index = Math.abs(hash) % colors.length
   return colors[index]!
 }
@@ -315,15 +324,15 @@ onMounted(() => {
   .header {
     padding: 40px 16px 16px;
   }
-  
+
   .header h1 {
     font-size: 28px;
   }
-  
+
   .search-bar {
     padding: 0 16px 16px;
   }
-  
+
   .contact-item {
     padding: 12px 16px;
   }

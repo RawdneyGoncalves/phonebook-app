@@ -1,4 +1,3 @@
-<!-- src/views/RegisterView.vue -->
 <template>
   <div class="auth-container">
     <div class="auth-card">
@@ -6,49 +5,37 @@
         <h1>Criar Conta</h1>
         <p>Registre-se para começar</p>
       </div>
-      
+
       <form @submit.prevent="handleRegister" class="auth-form">
         <div class="form-group">
-          <input 
-            v-model="name" 
-            type="text" 
-            placeholder="Nome" 
-            required
-            class="input"
-          />
+          <input v-model="name" type="text" placeholder="Nome" required class="input" />
         </div>
-        
+
         <div class="form-group">
-          <input 
-            v-model="email" 
-            type="email" 
-            placeholder="Email" 
-            required
-            class="input"
-          />
+          <input v-model="email" type="email" placeholder="Email" required class="input" />
         </div>
-        
+
         <div class="form-group">
-          <input 
-            v-model="password" 
-            type="password" 
-            placeholder="Senha" 
+          <input
+            v-model="password"
+            type="password"
+            placeholder="Senha"
             required
             minlength="6"
             class="input"
           />
         </div>
-        
+
         <button type="submit" class="btn-primary" :disabled="loading">
           {{ loading ? 'Criando...' : 'Criar Conta' }}
         </button>
-        
+
         <p class="auth-link">
-          Já tem conta? 
+          Já tem conta?
           <router-link to="/login">Entrar</router-link>
         </p>
       </form>
-      
+
       <p v-if="error" class="error">{{ error }}</p>
     </div>
   </div>
@@ -71,15 +58,15 @@ const error = ref('')
 const handleRegister = async () => {
   loading.value = true
   error.value = ''
-  
+
   const success = await authStore.register(name.value, email.value, password.value)
-  
+
   if (success) {
     router.push('/')
   } else {
     error.value = 'Erro ao criar conta. Email pode já estar em uso.'
   }
-  
+
   loading.value = false
 }
 </script>

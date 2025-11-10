@@ -1,4 +1,3 @@
-<!-- src/App.vue -->
 <template>
   <div id="app">
     <RouterView />
@@ -17,7 +16,8 @@ import { RouterView } from 'vue-router'
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
   background: #000;
   color: #fff;
   -webkit-font-smoothing: antialiased;
@@ -28,7 +28,9 @@ body {
   min-height: 100vh;
 }
 
-input, textarea, button {
+input,
+textarea,
+button {
   font-family: inherit;
 }
 
